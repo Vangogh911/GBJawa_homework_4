@@ -67,10 +67,12 @@ public class lee
         } else {
             System.out.println("Кратчайший путь занимает " + minimum_distance + " шагов");
         }
+        path(matrix, step_matrix, x, y);
+        System.out.println();
         return step_matrix;
     }
 
-    private static void path(int[][] rawMatrix, int[][] bfsMatrix,  int i, int j, int x, int y)
+    private static void path(int[][] rawMatrix, int[][] bfsMatrix, int x, int y)
     {
         int[] row = {-1, 0, 0, 1};
         int[] col = {0, -1, 1, 0};
@@ -79,7 +81,7 @@ public class lee
             System.arraycopy(rawMatrix[l], 0, pathMatrix[l], 0, rawMatrix[0].length);
         }
         pathMatrix[x][y] = bfsMatrix[x][y];
-        while (!(i == x && j == y))
+        while (pathMatrix[x][y] != 0)
         {
             for (int k = 0; k < 4; k++) {
                 if (bfsMatrix[x + row[k]][y + col[k]] == bfsMatrix[x][y] - 1){
@@ -118,7 +120,5 @@ public class lee
         for (int[] ints : waves) {
             System.out.println(Arrays.toString(ints));
         }
-        System.out.println();
-        path(matrix, waves, 2, 7, 8, 5);
     }
 }
