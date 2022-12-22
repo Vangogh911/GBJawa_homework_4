@@ -16,28 +16,29 @@ class node
 
 public class lee
 {
-    // Количество строк (R) и столбцов (C) в матрице
-    static int R = 9; // y
-    static int C = 13; // x
-
     static boolean isValid(int[][] mat, boolean[][] visited, int row, int col)
     {
-        return ((row >= 0) && (row < R)) && ((col >= 0) && (col < C)) && (mat[row][col] == 1) && (!visited[row][col]);
+        int R = mat.length;
+        int C = mat[0].length;
+        return ((row >= 0) && (row < R)) && ((col >= 0) && (col < C)) && (mat[row][col] == 0) && (!visited[row][col]);
     }
 
-    private static void bfs(int[][] matrix, int i, int j, int x, int y)
-    {
+    private static int[][] bfs(int[][] matrix, int i, int j, int x, int y) {
+        int R = matrix.length;
+        int C = matrix[0].length;
         int[] row =
-                { -1, 0, 0, 1 };
+                {-1, 0, 0, 1};
         int[] col =
-                { 0, -1, 1, 0 };
+                {0, -1, 1, 0};
 
         boolean[][] visited = new boolean[R][C];
+        int[][] step_matrix = matrix.clone();
         Queue<node> q = new LinkedList<node>();
         visited[i][j] = true;
         q.add(new node(i, j, 0));
         int minimum_distance = Integer.MAX_VALUE;
-        while (!q.isEmpty())
+        boolean flag = true;
+        while (flag)
         {
             node node = q.poll();
             i = node.x;
@@ -46,34 +47,38 @@ public class lee
             if (i == x && j == y)
             {
                 minimum_distance = dist;
-                break;
+                flag = false;
             }
 
-            for (int k = 0; k < 4; k++)
-            {
-                if (isValid(matrix, visited, i + row[k], j + col[k]))
-                {
+            for (int k = 0; k < 4; k++) {
+                if (isValid(matrix, visited, i + row[k], j + col[k])) {
                     visited[i + row[k]][j + col[k]] = true;
                     node n = new node(i + row[k], j + col[k], dist + 1);
                     q.add(n);
+                    step_matrix[i + row[k]][j + col[k]] = dist + 1;
                 }
             }
         }
 
-        if (minimum_distance == Integer.MAX_VALUE)
-        {
+        if (minimum_distance == Integer.MAX_VALUE) {
             System.out.println("Невозможно проложить маршрут");
-        }
-        else
-        {
+        } else {
             System.out.println("Кратчайший путь занимает " + minimum_distance + " шагов");
         }
+        return step_matrix;
+    }
+
+    private static int[][] path(int[][] rawMatrix, int[][] bfsMatrix,  int i, int j, int x, int y)
+    {
+        int[][] pathMatrix = rawMatrix.clone();
+
+        return pathMatrix;
     }
 
     public static void main(String[] args)
     {
-        int WALL = 0;
-        int EMPT = 1;
+        int WALL = -1;
+        int EMPT = 0;
         int[][] matrix = {
                 {WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL},
                 {WALL, WALL, WALL, EMPT, EMPT, EMPT, EMPT, EMPT, EMPT, EMPT, EMPT, WALL, WALL, WALL},
@@ -86,12 +91,13 @@ public class lee
                 {WALL, WALL, WALL, EMPT, EMPT, EMPT, EMPT, EMPT, EMPT, EMPT, EMPT, WALL, WALL, WALL},
                 {WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL}
         };
-        for (int[] ints : matrix) {
-            System.out.println(Arrays.toString(ints));
-        }
-        bfs(matrix, 2, 7, 8, 5);
-        for (int[] ints : matrix) {
-            System.out.println(Arrays.toString(ints));
-        }
+//        for (int[] ints : matrix) {
+//            System.out.println(Arrays.toString(ints));
+//        }
+        int[][] waves = bfs(matrix, 2, 7, 8, 5);
+//        int[][] waves = bfs(matrix, 8, 5, 2, 7);
+//        for (int[] ints : waves) {
+//            System.out.println(Arrays.toString(ints));
+//        }
     }
 }
